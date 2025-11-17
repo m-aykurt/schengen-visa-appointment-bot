@@ -1,6 +1,6 @@
 # 🤖 Schengen Visa Appointment Bot
 
-[![Next.js](https://img.shields.io/badge/Next.js-15.0-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16.0-black)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.0-blue)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Latest-green)](https://supabase.com/)
@@ -18,7 +18,7 @@ Gerçek zamanlı Schengen vize randevu bildirim botu. 17 ülke için otomatik ra
 - **Modern Dashboard** - Next.js 15 + React 19 + shadcn/ui
 
 ### 🚀 Teknolojiler
-- **Frontend:** Next.js 15, React 19, TypeScript, Tailwind CSS, shadcn/ui
+- **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS, shadcn/ui
 - **Backend:** Next.js API Routes, Supabase PostgreSQL
 - **Bildirimler:** Telegram Bot API
 - **Deployment:** Vercel (önerilen)

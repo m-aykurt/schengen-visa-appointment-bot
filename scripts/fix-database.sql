@@ -1,4 +1,4 @@
--- Quick Fix: Add telegram_chat_id to user_preferences
+    -- Quick Fix: Add telegram_chat_id to user_preferences
 -- Run this in Supabase SQL Editor
 
 -- 1. Add the column

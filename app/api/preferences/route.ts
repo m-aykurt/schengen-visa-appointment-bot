@@ -7,6 +7,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import {
   getUserPreferences,
   upsertUserPreferences,
+  getUserProfile,
+  createUserProfile,
 } from '@/lib/supabase/client';
 
 // GET - Tercihleri getir
@@ -55,6 +57,30 @@ export async function POST(request: NextRequest) {
         { error: 'userId is required' },
         { status: 400 }
       );
+    }
+
+    // UUID formatı kontrolü
+    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (!uuidRegex.test(userId)) {
+      return NextResponse.json(
+        { error: 'Invalid userId format. Must be a valid UUID.' },
+        { status: 400 }
+      );
+    }
+
+    // Kullanıcı profili yoksa oluştur
+    let userProfile = await getUserProfile(userId);
+    if (!userProfile) {
+      // Yeni kullanıcı profili oluştur (email zorunlu, geçici email kullan)
+      try {
+        userProfile = await createUserProfile({
+          id: userId,
+          email: `user-${userId}@temp.local`, // Geçici email
+        });
+      } catch (error: any) {
+        // Email zaten varsa veya başka hata varsa devam et
+        console.warn('User profile creation warning:', error.message);
+      }
     }
 
     const preferences = await upsertUserPreferences(userId, preferencesData);

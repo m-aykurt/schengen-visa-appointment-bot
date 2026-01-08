@@ -7,11 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { COUNTRIES, CITIES, formatDateTR } from '@/lib/constants/countries';
 import Link from 'next/link';
-
-// Mock user ID - gerçek uygulamada auth'dan gelecek
-const MOCK_USER_ID = 'user-123';
+import { getOrCreateUserId } from '@/lib/user-id';
 
 export default function DashboardPage() {
+  const [userId] = useState(() => getOrCreateUserId());
   const [preferences, setPreferences] = useState<any>(null);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [stats, setStats] = useState<any>(null);
@@ -20,26 +19,26 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [userId]);
 
   const loadData = async () => {
     try {
       // Tercihleri yükle
-      const prefsRes = await fetch(`/api/preferences?userId=${MOCK_USER_ID}`);
+      const prefsRes = await fetch(`/api/preferences?userId=${userId}`);
       if (prefsRes.ok) {
         const data = await prefsRes.json();
         setPreferences(data.preferences);
       }
 
       // Randevuları yükle
-      const apptsRes = await fetch(`/api/appointments?userId=${MOCK_USER_ID}&limit=10`);
+      const apptsRes = await fetch(`/api/appointments?userId=${userId}&limit=10`);
       if (apptsRes.ok) {
         const data = await apptsRes.json();
         setAppointments(data.appointments);
       }
 
       // İstatistikleri yükle
-      const statsRes = await fetch(`/api/stats?userId=${MOCK_USER_ID}`);
+      const statsRes = await fetch(`/api/stats?userId=${userId}`);
       if (statsRes.ok) {
         const data = await statsRes.json();
         setStats(data.stats);
@@ -65,7 +64,7 @@ export default function DashboardPage() {
         body: JSON.stringify({
           countries: preferences.countries,
           cities: preferences.cities,
-          userId: MOCK_USER_ID,
+          userId: userId,
         }),
       });
 

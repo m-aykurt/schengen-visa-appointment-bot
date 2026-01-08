@@ -7,10 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { COUNTRIES, CITIES } from '@/lib/constants/countries';
 import Link from 'next/link';
-
-const MOCK_USER_ID = 'user-123';
+import { getOrCreateUserId } from '@/lib/user-id';
 
 export default function SettingsPage() {
+  const [userId] = useState(() => getOrCreateUserId());
   const [preferences, setPreferences] = useState({
     countries: [] as string[],
     cities: [] as string[],
@@ -32,7 +32,7 @@ export default function SettingsPage() {
 
   const loadPreferences = async () => {
     try {
-      const response = await fetch(`/api/preferences?userId=${MOCK_USER_ID}`);
+      const response = await fetch(`/api/preferences?userId=${userId}`);
       if (response.ok) {
         const data = await response.json();
         if (data.preferences) {
@@ -54,7 +54,7 @@ export default function SettingsPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userId: MOCK_USER_ID,
+          userId: userId,
           ...preferences,
         }),
       });

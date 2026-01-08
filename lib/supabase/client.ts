@@ -116,14 +116,31 @@ export async function updateUserPreferences(userId: string, data: Partial<UserPr
 export async function upsertUserPreferences(userId: string, data: Partial<UserPreferences>) {
   if (!supabase) throw new Error('Supabase not initialized');
 
-  const { data: prefs, error } = await supabase
-    .from('user_preferences')
-    .upsert({ ...data, user_id: userId })
-    .select()
-    .single();
+  // Önce mevcut kaydı kontrol et
+  const existing = await getUserPreferences(userId);
 
-  if (error) throw error;
-  return prefs as UserPreferences;
+  if (existing) {
+    // Varsa güncelle
+    const { data: prefs, error } = await supabase
+      .from('user_preferences')
+      .update({ ...data, user_id: userId })
+      .eq('user_id', userId)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return prefs as UserPreferences;
+  } else {
+    // Yoksa oluştur
+    const { data: prefs, error } = await supabase
+      .from('user_preferences')
+      .insert([{ ...data, user_id: userId }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return prefs as UserPreferences;
+  }
 }
 
 // ============================================
